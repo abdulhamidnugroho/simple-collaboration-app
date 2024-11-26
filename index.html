@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-Time Collaboration</title>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+  <textarea id="editor" cols="100" rows="20"></textarea>
+
+  <script>
+    const socket = io('http://localhost:3000');
+
+    const docId = 'example-doc';
+    const editor = document.getElementById('editor');
+
+    // Join the document
+    socket.emit('joinDocument', docId);
+    console.log('Content', docId)
+
+    // Receive document content
+    socket.on('documentContent', (content) => {
+      console.log('Received content:', content); 
+      editor.value = content;
+    });
+
+    // Listen for updates
+    socket.on('documentUpdated', (content) => {
+      editor.value = content;
+    });
+
+    // Update document on input
+    editor.addEventListener('input', () => {
+      const content = editor.value;
+      socket.emit('updateDocument', { docId, content });
+    });
+  </script>
+</body>
+</html>
