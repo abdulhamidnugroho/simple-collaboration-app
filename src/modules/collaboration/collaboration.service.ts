@@ -23,7 +23,6 @@ export class CollaborationService {
   }
   
   
-
   async updateDocument(docId: string, content: string): Promise<void> {
     await this.documentModel.updateOne(
       { docId },
